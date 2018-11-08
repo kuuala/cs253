@@ -1,0 +1,10 @@
+#ifndef SEARCH_IN_STATE_SPACE_SOLVER_HPP
+#define SEARCH_IN_STATE_SPACE_SOLVER_HPP
+
+
+class solver {
+
+};
+
+
+#endif //SEARCH_IN_STATE_SPACE_SOLVER_HPP
