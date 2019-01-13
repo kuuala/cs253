@@ -3,6 +3,7 @@
 #include <functional>
 #include <vector>
 #include <set>
+#include <ctime>
 
 using namespace std;
 
@@ -55,6 +56,7 @@ public:
 
 
 Position *task12(int start, int end) {
+    clock_t s = clock();
     set<Position *, Position::comparator> positions;
     queue<Position *> q;
     auto first = new Position(start, 0, nullptr);
@@ -64,6 +66,8 @@ Position *task12(int start, int end) {
         auto current = q.front();
         q.pop();
         if (current->getNum() == end) {
+            cout << "time straight search: " << double(clock() - s) / CLOCKS_PER_SEC << endl;
+            cout << "space straight search: " << positions.size() << endl;
             return current;
         }
         for (const auto& fun: funs) {
@@ -78,6 +82,7 @@ Position *task12(int start, int end) {
 }
 
 Position *task3(int start, int end) {
+    clock_t s = clock();
     set<Position *, Position::comparator> positions;
     queue<Position *> q;
     auto first = new Position(end, 0, nullptr);
@@ -87,6 +92,8 @@ Position *task3(int start, int end) {
         auto current = q.front();
         q.pop();
         if (current->getNum() == start) {
+            cout << "time back search: " << double(clock() - s) / CLOCKS_PER_SEC << endl;
+            cout << "space back search: " << positions.size() << endl;
             return current;
         }
         for (const auto &f: refuns) {
@@ -104,6 +111,7 @@ Position *task3(int start, int end) {
 }
 
 pair<Position*, Position*> task4(int start, int end) {
+    clock_t s = clock();
     set<Position *, Position::comparator> straight_positions;
     set<Position *, Position::comparator> reverse_positions;
     queue<pair<Position *, bool>> q;
@@ -122,6 +130,8 @@ pair<Position*, Position*> task4(int start, int end) {
                 auto next = new Position(f(current->getNum()), current->getStep() + 1, current);
                 if (straight_positions.find(next) == straight_positions.end()) {
                     if (reverse_positions.find(next) != reverse_positions.end()) {
+                        cout << "time bidirectional search: " << double(clock() - s) / CLOCKS_PER_SEC << endl;
+                        cout << "space bidirectional search: " << reverse_positions.size() + straight_positions.size() << endl;
                         return {next, *reverse_positions.find(next)};
                     }
                     q.emplace(next, true);
@@ -135,6 +145,8 @@ pair<Position*, Position*> task4(int start, int end) {
                     auto next = new Position(num, current->getStep() + 1, current);
                     if (reverse_positions.find(next) == reverse_positions.end()) {
                         if (straight_positions.find(next) != straight_positions.end()) {
+                            cout << "time back search: " << double(clock() - s) / CLOCKS_PER_SEC << endl;
+                            cout << "space back search: " << reverse_positions.size() + straight_positions.size() << endl;
                             return {*straight_positions.find(next), next};
                         }
                         q.emplace(next, false);
@@ -153,7 +165,15 @@ int main() {
     cin >> a;
     cout << "Enter finish value: ";
     cin >> b;
-    auto answer = task4(a, b);
-    cout << answer.first->getStep() + answer.second->getStep();
+    cout << "=======================" << endl;
+    auto straight_answer = task12(a, b);
+    cout << straight_answer->getStep() << endl;
+    cout << "=======================" << endl;
+    auto back_answer = task3(a, b);
+    cout << back_answer->getStep() << endl;
+    cout << "=======================" << endl;
+    auto bidirectional_answer = task4(a, b);
+    cout << bidirectional_answer.first->getStep() + bidirectional_answer.second->getStep() << endl;
+    cout << "=======================" << endl;
     return 0;
 }
