@@ -15,8 +15,19 @@ int main() {
     try {
         auto start_pos = new Position("123456789ABCDFE0");
         auto new_game = new Game(start_pos);
+        new_game->a_star();
     } catch(int i) {
-        cout << "Bad start field";
+        switch (i) {
+            case 1:
+                cout << "Bad start field";
+                break;
+            case 2:
+                cout << "Start field is not solvable";
+                break;
+            default:
+                cout << "Else error";
+                break;
+        }
     }
     return 0;
 }

@@ -43,9 +43,9 @@ class Position {
     }
 
 public:
-    Position(const std::string &field): dist(0) {
+    explicit Position(const std::string &field): dist(0) {
         if (!is_correct_line(field)) {
-            throw -1;
+            throw 1;
         }
         this->field = field;
         heuristic = calc_heuristic();
@@ -55,6 +55,38 @@ public:
 
     ~Position() {
         delete parent;
+    }
+
+    std::string get_field() const {
+        return field;
+    }
+
+    int get_heuristic() const {
+        return heuristic;
+    }
+
+    int get_dist() const {
+        return dist;
+    }
+
+    void set_dist(int new_dist) {
+        dist = new_dist;
+    }
+
+    int get_forecast() const {
+        return forecast;
+    }
+
+    void set_forecast(int new_forecast) {
+        forecast = new_forecast;
+    }
+
+    Position* get_parent() const {
+        return parent;
+    }
+
+    void set_parent(Position* new_parent) {
+        parent = new_parent;
     }
 };
 
