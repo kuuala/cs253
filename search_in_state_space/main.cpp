@@ -14,7 +14,7 @@ int main() {
     cout << back_answer->getStep() << endl;
     cout << "=======================" << endl;
     auto bidirectional_answer = task4(a, b);
-    cout << bidirectional_answer.first->getStep() + bidirectional_answer.second->getStep() << endl;
+    cout << bidirectional_answer.first->getStep() << " + " << bidirectional_answer.second->getStep() << endl;
     cout << "=======================" << endl;
     return 0;
 }

@@ -113,8 +113,8 @@ pair<Position*, Position*> task4(int start, int end) {
                     auto next = new Position(num, current->getStep() + 1, current);
                     if (reverse_positions.find(next) == reverse_positions.end()) {
                         if (straight_positions.find(next) != straight_positions.end()) {
-                            cout << "time back search: " << double(clock() - s) / CLOCKS_PER_SEC << endl;
-                            cout << "space back search: " << reverse_positions.size() + straight_positions.size() << endl;
+                            cout << "time bidirectional search: " << double(clock() - s) / CLOCKS_PER_SEC << endl;
+                            cout << "space bidirectional search: " << reverse_positions.size() + straight_positions.size() << endl;
                             return {*straight_positions.find(next), next};
                         }
                         q.emplace(next, false);
