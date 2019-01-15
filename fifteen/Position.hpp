@@ -2,6 +2,7 @@
 #define FIFTEEN_POSITION_HPP
 
 #include <unordered_map>
+#include <iostream>
 #include <string>
 #include <set>
 
@@ -10,11 +11,11 @@ extern std::unordered_map<char, std::pair<int, int>> base;
 class Position {
     std::string field;
     int heuristic;
-    int dist;
+    int distance;
     int forecast;
-    Position *parent;
+    Position* parent;
 
-    bool is_correct_line(const std::string &field) {
+    bool is_correct_line(const std::string& field) const {
         if (field.length() != 16) {
             return false;
         }
@@ -38,19 +39,51 @@ class Position {
         return true;
     }
 
-    int calc_heuristic() {
-        return 0;
+    int calc_heuristic() const {
+        int sum = 0;
+        for (int i = 0; i < 4; ++i) {
+            for (int j = 0; j < 4; ++j) {
+                if (field[i * 4 + j] == '0') {
+                    continue;
+                }
+                sum += abs(base[field[i * 4 + j]].first - i) + abs(base[field[i * 4 +j]].second - j);
+            }
+        }
+        for (int i = 0; i < 4; ++i) {
+            for (int j1 = 0; j1 < 3; ++j1) {
+                for (int j2 = j1 + 1; j2 < 4; ++j2) {
+                    if (field[i * 4 + j1] != '0' && field[i + 4 + j2] != '0' &&
+                        base[field[i * 4 + j1]].first == i && base[field[i * 4 + j2]].first == i &&
+                        base[field[i * 4 + j1]].first == base[field[i * 4 + j2]].first &&
+                        base[field[i * 4 + j1]].second > base[field[i * 4 + j2]].second) {
+                        sum += 2;
+                    }
+                    if (field[j1 * 4 + i] != '0' && field[j2 + 4 + i] != '0' &&
+                        base[field[j1 * 4 + i]].second == i && base[field[j2 * 4 + i]].second == i &&
+                        base[field[j1 * 4 + i]].second == base[field[j2 * 4 + i]].second &&
+                        base[field[j1 * 4 + i]].first > base[field[j2 * 4 + i]].first) {
+                        sum += 2;
+                    }
+                }
+            }
+        }
+        return sum;
     }
 
 public:
-    explicit Position(const std::string &field): dist(0) {
+    explicit Position(const std::string& field): distance(0) {
         if (!is_correct_line(field)) {
             throw 1;
         }
         this->field = field;
         heuristic = calc_heuristic();
-        forecast = dist + heuristic;
+        forecast = distance + heuristic;
         parent = nullptr;
+    }
+
+    Position(std::string field, int distance, Position* parent): field(std::move(field)), distance(distance), parent(parent) {
+        heuristic = calc_heuristic();
+        forecast = distance + heuristic;
     }
 
     ~Position() {
@@ -65,12 +98,12 @@ public:
         return heuristic;
     }
 
-    int get_dist() const {
-        return dist;
+    int get_distance() const {
+        return distance;
     }
 
     void set_dist(int new_dist) {
-        dist = new_dist;
+        distance = new_dist;
     }
 
     int get_forecast() const {
@@ -88,7 +121,20 @@ public:
     void set_parent(Position* new_parent) {
         parent = new_parent;
     }
-};
 
+    friend std::ostream& operator<<(std::ostream& os, const Position& position) {
+        for (int i = 0; i < 4; ++i, os << "\n")
+            for (int j = 0; j < 4; ++j, os << " ")
+                os << position.field[i * 4 + j];
+        os << "-------\n";
+        return os;
+    }
+
+    struct comparator {
+        bool operator()(const Position* first_position, const Position* second_position) const {
+            return first_position->get_field() < second_position->get_field();
+        }
+    };
+};
 
 #endif //FIFTEEN_POSITION_HPP
