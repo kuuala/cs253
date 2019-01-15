@@ -1,7 +1,5 @@
 #include "Solver.hpp"
 
-using namespace std;
-
 int main() {
     int a, b;
     cout << "Enter start value: ";

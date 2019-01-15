@@ -1,7 +1,5 @@
 #include "Solver.hpp"
 
-using namespace std;
-
 const vector<function<int(int)>> functions {
         [] (int num) { return num * 2; },
         [] (int num) { return num + 3; },

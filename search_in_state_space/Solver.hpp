@@ -9,6 +9,8 @@
 #include <set>
 #include <ctime>
 
+using namespace std;
+
 Position *task12(int start, int end);
 Position *task3(int start, int end);
 std::pair<Position*, Position*> task4(int start, int end);
